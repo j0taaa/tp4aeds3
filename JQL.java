@@ -1,5 +1,8 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.function.Predicate;
+
+import rsa.RSA;
 
 public class JQL {
 
@@ -215,7 +218,10 @@ public class JQL {
         "7 - Buscar elemento utilizando Arvore B\n" +
         "8 - Realizar Backup\n" +
         "9 - Restaurar Backup\n" +
-        "10 - Parar"
+        "10 - Pesquisar descrição utilizando BoyerMoore\n" +
+        "11 - Adicionar produto com url criptografada\n" +
+        "12 - Ler URL de elemento criptografado\n" +
+        "13 - Parar"
       );
 
       nextAction = Integer.parseInt(sc.nextLine());
@@ -462,6 +468,58 @@ public class JQL {
           bm2.retoreBackup(algoritmo, backupNumber);
           break;
         case 10:
+          System.out.println("Qual string deseja pesquisar?");
+          String textoBusca = sc.nextLine();
+          ArrayList<Produto> produtos = fm.getProdutosByDescricaoBM(textoBusca);
+          for(Produto prod: produtos){
+            System.out.println(prod);
+            System.out.println("\n\n");
+          }
+          break;
+        case 11:
+          Produto prod = new Produto();
+          System.out.println("Digite o nome do produto");
+          prod.setName(sc.nextLine());
+          System.out.println("Digite a descrição do produto");
+          prod.setDescription(sc.nextLine());
+          System.out.println("Digite o preço do produto");
+          prod.setPrice(Float.parseFloat(sc.nextLine()));
+          System.out.println("Digite a moeda do produto");
+          prod.setCurrency(sc.nextLine());
+          System.out.println("Digite a url do produto");
+          prod.setUrl(RSA.criptografarStr(sc.nextLine(), 173, 323));
+          System.out.println("Digite o sku do produto");
+          prod.setSku(sc.nextLine());
+          System.out.println("Digite a data do produto (em milisegundos)");
+          prod.setDate(Long.parseLong(sc.nextLine()));
+          System.out.println("Digite os termos do produto");
+          prod.setTerms(sc.nextLine());
+          System.out.println("Digite a seção do produto (M/F)");
+          prod.setSection(sc.nextLine().equals("M"));
+          System.out.println(
+            "Digite as imagens do produto (separadas por vírgula)"
+          );
+          prod.setImages(sc.nextLine().split(","));
+          System.out.println(
+            "Digite os downloads das imagens do produto (separados por vírgula)"
+          );
+          prod.setImageDownloads(sc.nextLine().split(","));
+          prod.setAlive(true);
+          fm.writeElementForRSA(prod);
+
+          System.out.println("\n\nProduto com id " + prod.getId() + " adicionado com sucesso\n");
+          System.out.println("Chave pública: 173");
+          break;
+        case 12:
+          System.out.println("Qual o ID do produto que deseja ler a URL?");
+          int idBuscado = Integer.parseInt(sc.nextLine());
+          System.out.println("Qual é a chave privada que deseja utilizar? (5)");
+          int chavePriv = Integer.parseInt(sc.nextLine());
+          Produto pr = fm.readElement(idBuscado);
+          System.out.println(pr.getUrl());
+          System.out.println(RSA.descriptografar(pr.getUrl(), chavePriv, 323));
+          break;
+        case 13:
           fm.close();
           sc.close();
           return;

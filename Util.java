@@ -1,4 +1,5 @@
 import java.io.RandomAccessFile;
+import java.nio.charset.StandardCharsets;
 import java.time.format.DateTimeFormatter;
 
 public class Util {
@@ -374,5 +375,21 @@ public class Util {
       return removeEndingNulls(res);
     }
     
+  }
+
+
+  public static byte[] getByteArrayForRSA(String str) {
+    byte[] bArr = str.getBytes(StandardCharsets.ISO_8859_1);
+    short len = (short) bArr.length;
+
+    byte[] res = new byte[bArr.length + 2];
+    res[0] = (byte) (len >> 8);
+    res[1] = (byte) len;
+
+    for (int i = 0; i < bArr.length; i++) {
+      res[i + 2] = bArr[i];
+    }
+
+    return res;
   }
 }

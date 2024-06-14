@@ -1,9 +1,11 @@
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.function.Predicate;
 
 import hash.HashExtensivel;
 import listaInvertida.ListaInvertida;
 import arvore.ArvoreB;
+import boyerMoore.BoyerMoore;
 
 public class FileManager {
     private RandomAccessFile raf;
@@ -380,5 +382,56 @@ public class FileManager {
 
         raf.seek(pos);
         return readElement();
+    }
+
+    public ArrayList<Produto> getProdutosByDescricaoBM(String subString) throws Exception{
+        ArrayList<Produto> produtos = new ArrayList<Produto>();
+
+        resetPosition();
+
+        Produto p = readNext(1)[0];
+
+        int[] badCharacterTable = BoyerMoore.getBadCharacterTable(subString);
+        int[] goodSuffixArr = BoyerMoore.getGoodSuffixArr(subString);
+
+        while(p!=null){
+            String descricao = p.getDescription();
+
+            System.out.println(p.getId() + " " + p.getName());
+
+            if(BoyerMoore.boyerMoore(descricao, subString, badCharacterTable, goodSuffixArr)){
+                produtos.add(p);
+            }
+
+            p = readNext(1)[0];
+        }
+
+        return produtos;
+    }
+
+    public int writeElementForRSA(Produto p) throws Exception{
+        raf.seek(0);
+        int lastId = raf.readInt();
+        
+        p.setId(lastId+1);
+
+        long pos = raf.length();
+
+        raf.seek(pos);
+        raf.write(p.toByteArrayForRSA());
+
+        raf.seek(0);
+        raf.writeInt(lastId+1);
+
+
+        System.out.println(p.getId());
+        he.inserir(p.getId(), pos);
+
+        li1.inserirProduto(p.getId(), p.getName());
+        li2.inserirProduto(p.getId(), p.getTerms());
+
+        arvore.inserir(p.getId(), pos);
+
+        return lastId+1;
     }
 }

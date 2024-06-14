@@ -401,4 +401,70 @@ public class Produto {
         return false;
     }
   }
+
+  public byte[] toByteArrayForRSA() {
+    byte[] aliveArr = Util.getByteArray(this.alive, (byte) ' ', (byte) '*');
+
+    byte[] idArr = Util.getByteArray(this.id);
+
+    byte[] urlArr = Util.getByteArrayForRSA(this.url);
+
+    byte[] skuArr = Util.getByteArray(this.sku);
+
+    byte[] nameArr = Util.getByteArray(this.name);
+
+    byte[] descriptionArr = Util.getLongByteArray(this.description);
+
+    byte[] priceArr = Util.getByteArray(this.price);
+
+    byte[] currentArr = Util.getByteArray(this.currency, 3);
+
+    byte[] imagesArr = Util.getLongByteArray(Util.combineStrings(this.images));
+
+    byte[] dateArr = Util.getByteArray(this.date);
+
+    byte[] termsArr = Util.getByteArray(this.terms);
+
+    byte[] sectionArr = Util.getByteArray(this.section, (byte) 'M', (byte) 'F');
+
+    byte[] image_downloadsArr = Util.getLongByteArray(
+      Util.combineStrings(this.image_downloads)
+    );
+
+    int length =
+      idArr.length +
+      urlArr.length +
+      skuArr.length +
+      nameArr.length +
+      descriptionArr.length +
+      priceArr.length +
+      currentArr.length +
+      imagesArr.length +
+      dateArr.length +
+      termsArr.length +
+      sectionArr.length +
+      image_downloadsArr.length;
+
+    byte[] lengthArr = Util.getByteArray(length);
+
+    byte[] res = Util.combineByteArrays(
+      aliveArr,
+      lengthArr,
+      idArr,
+      urlArr,
+      skuArr,
+      nameArr,
+      descriptionArr,
+      priceArr,
+      currentArr,
+      imagesArr,
+      dateArr,
+      termsArr,
+      sectionArr,
+      image_downloadsArr
+    );
+
+    return res;
+  }
+  
 }
