@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.function.Predicate;
-
 import rsa.RSA;
 
 public class JQL {
@@ -175,7 +174,7 @@ public class JQL {
   }
 
   /**
-   * Recebe (parâmetro) um arquivo e uma query. Retorna um array de produtos que satisfazem a query.
+   * Função de inicialização do JQL. Permite ao usuário realizar diversas ações em um arquivo de produtos.
    * @throws Exception
    */
   public static void startJQL() throws Exception {
@@ -423,8 +422,7 @@ public class JQL {
           System.out.println("Busca deve ser inclusiva ou exclusiva? (1/0)");
           boolean inclusivo = sc.nextLine().equals("1");
           Produto[] produtos1 = fm.findProdutosByTitle(titulo, inclusivo);
-          
-          
+
           Produto[] produtos2 = fm.findProdutosByCategory(category);
 
           Produto[] res2 = Util.mergeArrays(produtos1, produtos2, inclusivo);
@@ -443,7 +441,7 @@ public class JQL {
           if (!foundOne2) {
             System.out.println("Nenhum produto encontrado\n\n");
           }
-          
+
           break;
         case 7:
           System.out.println("Digite o id do produto que deseja buscar");
@@ -465,13 +463,13 @@ public class JQL {
           System.out.println("Qual algoritmo deseja utilizar? (huffman/lzw)");
           String algoritmo = sc.nextLine();
           BackupManager bm2 = new BackupManager();
-          bm2.retoreBackup(algoritmo, backupNumber);
+          bm2.restoreBackup(algoritmo, backupNumber);
           break;
         case 10:
           System.out.println("Qual string deseja pesquisar?");
           String textoBusca = sc.nextLine();
           ArrayList<Produto> produtos = fm.getProdutosByDescricaoBM(textoBusca);
-          for(Produto prod: produtos){
+          for (Produto prod : produtos) {
             System.out.println(prod);
             System.out.println("\n\n");
           }
@@ -507,7 +505,9 @@ public class JQL {
           prod.setAlive(true);
           fm.writeElementForRSA(prod);
 
-          System.out.println("\n\nProduto com id " + prod.getId() + " adicionado com sucesso\n");
+          System.out.println(
+            "\n\nProduto com id " + prod.getId() + " adicionado com sucesso\n"
+          );
           System.out.println("Chave pública: 173");
           break;
         case 12:
